@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tally Web Extractor — Enterprise Accounting & Consolidated Audit Suite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ================= TOP NAVIGATION ================= -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-brand">
+        <div class="nav-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+        </div>
+        <div class="nav-brand-text">
+          <span class="nav-brand-title">Tally Web Extractor</span>
+          <span class="nav-brand-badge">v3.4 Cloud</span>
+        </div>
+      </a>
+
+      <div class="nav-menu">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+        <a href="#architecture" class="nav-link">Architecture</a>
+        <a href="#quickstart" class="nav-link">Quickstart</a>
+        <a href="#tiers" class="nav-link">License Tiers</a>
+      </div>
+
+      <div class="nav-actions">
+        <!-- Live Agent Detection Badge -->
+        <div id="nav-agent-status" class="nav-agent-pill status-probing">
+          <span class="status-dot"></span>
+          <span class="status-label">Probing Agent...</span>
+        </div>
+        <a href="#download" class="btn btn-primary btn-sm">Download Agent</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ================= HERO SECTION ================= -->
+  <header class="hero">
+    <div class="hero-container">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        <span>Engineered & Developed By : <strong>Ansh Garg</strong></span>
+      </div>
+
+      <h1 class="hero-title">
+        Extract TallyPrime & ERP 9 Data<br>
+        <span class="gradient-text">Directly in Your Web Browser</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Eliminate tedious desktop EXEs. The hybrid web extraction platform with pure signed numeric net amounts,
+        fully opened group hierarchies for Trial Balance, and multi-company consolidation into strictly 1 Master Excel workbook.
+      </p>
+
+      <!-- AGENT BRIDGE STATUS CARD -->
+      <div id="hero-bridge-card" class="bridge-card bridge-card-offline">
+        <div class="bridge-indicator">
+          <div class="bridge-radar"></div>
+          <div class="bridge-status-icon" id="bridge-status-icon">⚡</div>
+        </div>
+        <div class="bridge-details">
+          <div class="bridge-title" id="bridge-title">Checking Local Agent Connection...</div>
+          <div class="bridge-desc" id="bridge-desc">
+            To extract data, your local agent bridges your browser with Tally running on <code>localhost:8080</code>.
+          </div>
+        </div>
+        <div class="bridge-cta" id="bridge-cta">
+          <a href="#download" class="btn btn-sm btn-outline-white">Download Agent (35 KB)</a>
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        <a href="downloads/tally-web-agent.zip" class="btn btn-primary btn-lg" download>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Download Web Agent (.ZIP)
+        </a>
+        <a id="btn-launch-dashboard" href="http://localhost:5000" target="_blank" class="btn btn-secondary btn-lg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
+          Open Web Dashboard
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">Audit Reconciliation</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">Strictly 1</div>
+          <div class="stat-label">Master XLSX Workbook</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">85%+</div>
+          <div class="stat-label">Fast Mode XML Reduction</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">0 bytes</div>
+          <div class="stat-label">Data Sent to Cloud (100% Local)</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= ARCHITECTURE SECTION ================= -->
+  <section id="architecture" class="section section-dark">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Zero Cloud Data Risk</div>
+        <h2 class="section-title">How The Online Web Architecture Works</h2>
+        <p class="section-desc">
+          Because Tally's internal HTTP server is locked to <code>localhost:8080</code> on your local Windows PC,
+          a public website cannot access it directly due to browser CORS/Same-Origin security policies.
+          Our solution provides the best of both worlds:
+        </p>
+      </div>
+
+      <div class="architecture-diagram">
+        <div class="arch-box arch-browser">
+          <div class="arch-icon">🌐</div>
+          <div class="arch-title">Web Dashboard</div>
+          <div class="arch-sub">Modern browser UI running on React / HTML5. Configure filters, select heads, view live logs.</div>
+          <div class="arch-badge">Frontend (User Friendly)</div>
+        </div>
+
+        <div class="arch-arrow">
+          <div class="arch-arrow-line"></div>
+          <div class="arch-arrow-label">REST API (HTTP / JSON)</div>
+        </div>
+
+        <div class="arch-box arch-agent">
+          <div class="arch-icon">⚡</div>
+          <div class="arch-title">Local Bridge Agent</div>
+          <div class="arch-sub">Lightweight background service (35 KB) on your PC. Translates web requests into TDL XML queries.</div>
+          <div class="arch-badge">Local Engine (localhost:5000)</div>
+        </div>
+
+        <div class="arch-arrow">
+          <div class="arch-arrow-line"></div>
+          <div class="arch-arrow-label">TDL XML (Port 8080)</div>
+        </div>
+
+        <div class="arch-box arch-tally">
+          <div class="arch-icon">📊</div>
+          <div class="arch-title">TallyPrime / ERP 9</div>
+          <div class="arch-sub">Your accounting data stays 100% private inside your local network. Generates clean Excel reports.</div>
+          <div class="arch-badge">Accounting Core</div>
+        </div>
+      </div>
+
+      <div class="security-callout">
+        <div class="security-icon">🔒</div>
+        <div class="security-text">
+          <strong>Enterprise Privacy Guarantee:</strong> None of your financial records, ledgers, or amounts ever leave your machine. The web interface communicates strictly with your local machine's loopback address.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FEATURES SECTION ================= -->
+  <section id="features" class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Audit-Grade Capabilities</div>
+        <h2 class="section-title">Engineered Specifically for CAs & Financial Auditors</h2>
+        <p class="section-desc">Every detail is built to eliminate manual spreadsheet cleanup and deliver presentation-ready Excel workbooks.</p>
+      </div>
+
+      <div class="features-grid">
+        <!-- Feature 1 -->
+        <div class="feature-card">
+          <div class="feature-icon bg-blue">➕➖</div>
+          <h3 class="feature-title">Pure Numeric Signed Net Amount</h3>
+          <p class="feature-desc">
+            No more string manipulation! All "Dr" and "Cr" text strings are stripped from transaction amounts.
+            Debits are positive floats (<code>+</code>), Credits are negative (<code>-</code>). Run instant <code>=SUM()</code> formulas and Pivot Tables directly.
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="feature-card">
+          <div class="feature-icon bg-emerald">📑</div>
+          <h3 class="feature-title">Active "Trial Balance Extract" Sheet</h3>
+          <p class="feature-desc">
+            Replaces flat ledger lists with a full hierarchy (e.g. <code>Indirect Expenses &gt; Rent &gt; Branch Rent</code>).
+            Automatically filters out zero-movement dormant ledgers, presenting only active accounts.
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="feature-card">
+          <div class="feature-icon bg-indigo">📁</div>
+          <h3 class="feature-title">Strictly 1 Master XLSX Workbook</h3>
+          <p class="feature-desc">
+            Zero duplicate CSV files cluttering your folders. Generates exactly ONE clean, styled workbook containing
+            <code>Trial Balance Extract</code>, <code>Transaction Register</code>, and <code>Summary</code> sheets.
+          </p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="feature-card">
+          <div class="feature-icon bg-purple">🏢</div>
+          <h3 class="feature-title">Multi-Company Consolidation</h3>
+          <p class="feature-desc">
+            Merge all member entities (e.g. Dua Associates 7 member branches) into a single folder and single sheet with
+            <code>Company</code> as Column 1, perfectly structured for group audits.
+          </p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="feature-card">
+          <div class="feature-icon bg-amber">⚡</div>
+          <h3 class="feature-title">High-Speed Fast Mode</h3>
+          <p class="feature-desc">
+            Uses targeted XML data projection to cut payload size by over <strong>85%</strong>, extracting tens of thousands
+            of transactions in seconds without freezing Tally.
+          </p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="feature-card">
+          <div class="feature-icon bg-rose">🛡️</div>
+          <h3 class="feature-title">100% Audit Integrity Filters</h3>
+          <p class="feature-desc">
+            Automatically excludes Memorandum, Optional, Cancelled, and Deleted vouchers to ensure your extracted registers
+            match the audited ledger balance to the exact paise.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= QUICKSTART GUIDE ================= -->
+  <section id="quickstart" class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Get Started in 60 Seconds</div>
+        <h2 class="section-title">Three Easy Steps to Extract Online</h2>
+        <p class="section-desc">No complex databases or cloud setups required.</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <h3 class="step-title">Download the Agent</h3>
+          <p class="step-desc">Grab the lightweight <code>tally-web-agent.zip</code> from the download section below and extract it anywhere on your PC.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <h3 class="step-title">Run the Agent</h3>
+          <p class="step-desc">Double-click <code>run_web_agent.bat</code>. It starts the local bridge service and automatically launches the web dashboard in your browser.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <h3 class="step-title">Extract & Download</h3>
+          <p class="step-desc">Select your company and heads, click <strong>Extract</strong>, and download your consolidated Master Excel workbook instantly!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DOWNLOAD SECTION ================= -->
+  <section id="download" class="section">
+    <div class="container">
+      <div class="download-box">
+        <div class="download-content">
+          <div class="section-tag">Direct Download</div>
+          <h2 class="download-heading">Get The Tally Web Agent v3.4</h2>
+          <p class="download-text">
+            Includes the local REST server, web dashboard templates, pure OpenXML generator, and tiered licensing engine.
+          </p>
+
+          <div class="download-options">
+            <a href="downloads/tally-web-agent.zip" class="btn btn-primary btn-lg" download>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <div>
+                <div style="font-size: 1.05rem; font-weight: 800;">Download Agent Bundle (.ZIP)</div>
+                <div style="font-size: 0.75rem; opacity: 0.85;">v3.4 Production &bull; 35 KB &bull; Windows 10/11</div>
+              </div>
+            </a>
+          </div>
+
+          <div class="download-requirements">
+            <span>Requires: Windows 10/11 &bull; TallyPrime or Tally.ERP 9 running on port 8080 &bull; Python 3.9+</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LICENSING TIERS ================= -->
+  <section id="tiers" class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Flexible Access</div>
+        <h2 class="section-title">License Tiers & Enterprise Upgrades</h2>
+        <p class="section-desc">Managed centrally via your Google Sheets cloud dashboard.</p>
+      </div>
+
+      <div class="pricing-grid">
+        <!-- Trial -->
+        <div class="pricing-card">
+          <div class="pricing-tier">TRIAL</div>
+          <div class="pricing-price">Free</div>
+          <div class="pricing-sub">Automatic registration for new machines</div>
+          <ul class="pricing-features">
+            <li>✓ 2 Complimentary Full Extractions</li>
+            <li>✓ Single Company Mode</li>
+            <li>✓ P&L & Balance Sheet Statements</li>
+            <li>✓ Strictly 1 Excel Output (.xlsx)</li>
+            <li>✗ Multi-Company Consolidation</li>
+            <li>✗ High-Speed Fast Mode</li>
+          </ul>
+        </div>
+
+        <!-- Pro -->
+        <div class="pricing-card">
+          <div class="pricing-tier">PRO</div>
+          <div class="pricing-price">Annual</div>
+          <div class="pricing-sub">For Chartered Accountants & Firms</div>
+          <ul class="pricing-features">
+            <li>✓ Unlimited Extractions</li>
+            <li>✓ High-Speed Fast Mode (85% smaller XML)</li>
+            <li>✓ Multi-Head Checkbox Selection</li>
+            <li>✓ Active Trial Balance Extract</li>
+            <li>✓ Pure Signed Net Amount Columns</li>
+            <li>✗ Multi-Company Consolidation</li>
+          </ul>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="pricing-card featured">
+          <div class="featured-badge">MOST POPULAR</div>
+          <div class="pricing-tier">ENTERPRISE</div>
+          <div class="pricing-price">Unlimited</div>
+          <div class="pricing-sub">Full Multi-Company Audit Suite</div>
+          <ul class="pricing-features">
+            <li>✓ <strong>Multi-Company Consolidation</strong> (All Member Entities into 1 Sheet)</li>
+            <li>✓ High-Speed Fast Mode (Sub-second extraction)</li>
+            <li>✓ Unlimited Extractions & Companies</li>
+            <li>✓ Active TB Extract + Signed TB Balances</li>
+            <li>✓ Offline HMAC Key Activation</li>
+            <li>✓ Priority Audit Support</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="footer-title">Universal Tally Data Extractor v3.4</div>
+        <div class="footer-copy">
+          Engineered & Developed By : <strong>Ansh Garg</strong><br>
+          Enterprise Accounting Systems Automation &bull; High-Speed Audit Suite
+        </div>
+      </div>
+      <div class="footer-meta">
+        <div>Proprietary Software Suite &bull; All Rights Reserved</div>
+        <div class="mt-1"><a href="http://localhost:5000" target="_blank" class="footer-link">Launch Web Dashboard (localhost:5000)</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

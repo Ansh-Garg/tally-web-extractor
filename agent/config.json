@@ -1,0 +1,7 @@
+{
+  "cloud_api_url": "https://script.google.com/macros/s/AKfycbyzogxJwMJaM7UA21B7do1kuWEcbZJz5jV8C8JCsItzh9foQdLz_7NU6I5LsECLT9oJ/exec",
+  "tally_url": "http://localhost:8080",
+  "default_fy_start": "20250401",
+  "default_fy_end": "20260331",
+  "default_category": "pl"
+}

@@ -1,0 +1,15 @@
+# Render Blueprint Configuration
+# Automatically deploys the Tally Web Extractor on Render
+services:
+  - type: web
+    name: tally-web-extractor
+    runtime: python
+    plan: free
+    region: oregon
+    buildCommand: "python package_agent.py && pip install -r requirements.txt"
+    startCommand: "gunicorn server:app"
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
