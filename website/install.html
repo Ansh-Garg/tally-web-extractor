@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Install Tally Web Bridge Extension — Step-by-Step Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f1117;
+      --bg2: #141821;
+      --card: #1a1f2e;
+      --border: #2d3748;
+      --primary: #6366f1;
+      --primary-glow: rgba(99,102,241,0.2);
+      --success: #10b981;
+      --success-glow: rgba(16,185,129,0.15);
+      --warning: #f59e0b;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --dim: #64748b;
+      --code-bg: #0d1117;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+    /* NAV */
+    .nav { display:flex; align-items:center; justify-content:space-between; padding:16px 32px; background:rgba(15,17,23,0.95); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100; backdrop-filter:blur(12px); }
+    .nav-brand { display:flex; align-items:center; gap:10px; text-decoration:none; }
+    .nav-logo { width:32px; height:32px; background:linear-gradient(135deg,var(--primary),#8b5cf6); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1rem; color:#fff; font-weight:800; }
+    .nav-title { font-weight:800; font-size:1rem; color:var(--text); }
+    .nav-subtitle { font-size:0.72rem; color:var(--muted); }
+    .nav-back { text-decoration:none; color:var(--muted); font-size:0.85rem; display:flex; align-items:center; gap:6px; padding:8px 14px; border:1px solid var(--border); border-radius:8px; transition:all 0.2s; }
+    .nav-back:hover { color:var(--text); border-color:var(--primary); }
+
+    /* HERO */
+    .hero { text-align:center; padding:60px 24px 40px; }
+    .hero-badge { display:inline-flex; align-items:center; gap:8px; background:var(--primary-glow); border:1px solid var(--primary); border-radius:100px; padding:6px 16px; margin-bottom:20px; font-size:0.8rem; color:var(--primary); font-weight:600; }
+    .badge-dot { width:7px; height:7px; border-radius:50%; background:var(--primary); animation:pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    h1 { font-size:clamp(1.8rem,4vw,2.6rem); font-weight:800; line-height:1.2; }
+    .gradient-text { background:linear-gradient(135deg,var(--primary),#a78bfa,#ec4899); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .hero-sub { color:var(--muted); font-size:1rem; margin-top:14px; max-width:540px; margin-left:auto; margin-right:auto; }
+
+    /* PROGRESS TRACK */
+    .progress-track { display:flex; align-items:center; justify-content:center; gap:0; max-width:600px; margin:40px auto 0; padding:0 24px; }
+    .prog-step { display:flex; flex-direction:column; align-items:center; gap:8px; flex:1; }
+    .prog-circle { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.9rem; transition:all 0.4s; border:2px solid var(--border); background:var(--card); color:var(--muted); }
+    .prog-circle.done { background:var(--success); border-color:var(--success); color:#fff; }
+    .prog-circle.active { background:var(--primary); border-color:var(--primary); color:#fff; box-shadow:0 0 20px var(--primary-glow); }
+    .prog-label { font-size:0.72rem; color:var(--muted); font-weight:600; text-align:center; white-space:nowrap; }
+    .prog-label.active { color:var(--primary); }
+    .prog-label.done { color:var(--success); }
+    .prog-line { flex:1; height:2px; background:var(--border); max-width:60px; transition:background 0.4s; }
+    .prog-line.done { background:var(--success); }
+
+    /* WIZARD */
+    .wizard { max-width:760px; margin:48px auto; padding:0 24px 80px; }
+    .step-panel { display:none; }
+    .step-panel.active { display:block; animation:fadeIn 0.3s ease; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+    .step-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:36px 40px; }
+    .step-header { display:flex; align-items:center; gap:16px; margin-bottom:28px; }
+    .step-num { width:48px; height:48px; background:linear-gradient(135deg,var(--primary),#8b5cf6); border-radius:12px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.2rem; color:#fff; flex-shrink:0; }
+    .step-title { font-size:1.3rem; font-weight:800; }
+    .step-subtitle { color:var(--muted); font-size:0.85rem; margin-top:4px; }
+
+    /* VISUAL */
+    .visual-box { background:var(--code-bg); border:1px solid var(--border); border-radius:12px; padding:28px; margin:20px 0; position:relative; overflow:hidden; }
+    .visual-box::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--primary),#8b5cf6,#ec4899); }
+    .mock-browser { background:#1e2433; border-radius:10px; overflow:hidden; border:1px solid #374151; }
+    .mock-chrome-bar { background:#2d3545; padding:10px 14px; display:flex; align-items:center; gap:10px; }
+    .mock-dots { display:flex; gap:5px; }
+    .mock-dot { width:10px; height:10px; border-radius:50%; }
+    .mock-dot.red { background:#ef4444; }
+    .mock-dot.yellow { background:#f59e0b; }
+    .mock-dot.green { background:#10b981; }
+    .mock-url { flex:1; background:#374151; border-radius:5px; padding:5px 12px; font-family:monospace; font-size:0.78rem; color:#fbbf24; }
+    .mock-chrome-content { padding:20px; }
+
+    .mock-toggle-row { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:#111827; border-radius:8px; margin-bottom:10px; }
+    .mock-toggle-label { font-size:0.85rem; font-weight:600; }
+    .mock-toggle { width:44px; height:24px; background:var(--success); border-radius:12px; display:flex; align-items:center; padding:3px; transition:0.2s; cursor:pointer; }
+    .mock-toggle .knob { width:18px; height:18px; border-radius:50%; background:#fff; margin-left:auto; box-shadow:0 1px 3px rgba(0,0,0,0.3); }
+    .mock-toggle.off { background:#374151; }
+    .mock-toggle.off .knob { margin-left:0; }
+
+    .mock-btn { display:inline-flex; align-items:center; gap:7px; padding:9px 18px; background:var(--primary); color:#fff; border-radius:8px; font-size:0.82rem; font-weight:700; cursor:pointer; border:none; }
+    .mock-btn.sm { padding:6px 13px; font-size:0.78rem; }
+
+    .mock-ext-card { background:#1f2937; border:1px solid #374151; border-radius:8px; padding:14px 16px; display:flex; align-items:center; gap:14px; margin-top:10px; }
+    .ext-icon { width:36px; height:36px; background:linear-gradient(135deg,var(--primary),#8b5cf6); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.2rem; }
+    .ext-info .ext-name { font-weight:700; font-size:0.88rem; }
+    .ext-info .ext-sub { font-size:0.75rem; color:var(--muted); }
+    .ext-status { margin-left:auto; }
+
+    /* PATH BOX */
+    .path-box { background:var(--code-bg); border:1px solid #374151; border-radius:10px; padding:16px 18px; font-family:'JetBrains Mono',monospace; font-size:0.82rem; color:#fbbf24; display:flex; align-items:center; gap:12px; margin:16px 0; }
+    .path-box .path-icon { font-size:1.2rem; flex-shrink:0; }
+    .path-text { flex:1; word-break:break-all; }
+    .copy-btn { background:#374151; border:none; color:var(--muted); padding:7px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer; white-space:nowrap; transition:all 0.2s; }
+    .copy-btn:hover { background:var(--primary); color:#fff; }
+    .copy-btn.copied { background:var(--success); color:#fff; }
+
+    /* CALLOUT */
+    .callout { display:flex; align-items:flex-start; gap:12px; padding:14px 18px; border-radius:10px; margin:16px 0; font-size:0.85rem; }
+    .callout.info { background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.3); color:#a5b4fc; }
+    .callout.success { background:var(--success-glow); border:1px solid rgba(16,185,129,0.3); color:#6ee7b7; }
+    .callout.warning { background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.3); color:#fcd34d; }
+    .callout-icon { font-size:1rem; flex-shrink:0; margin-top:1px; }
+    .callout strong { display:block; margin-bottom:3px; }
+
+    /* BUTTONS */
+    .btn-row { display:flex; gap:12px; margin-top:28px; flex-wrap:wrap; }
+    .btn { display:inline-flex; align-items:center; gap:8px; padding:13px 24px; border-radius:10px; font-weight:700; font-size:0.9rem; cursor:pointer; border:none; transition:all 0.2s; text-decoration:none; }
+    .btn-primary { background:linear-gradient(135deg,var(--primary),#7c3aed); color:#fff; }
+    .btn-primary:hover { opacity:0.9; transform:translateY(-1px); }
+    .btn-secondary { background:var(--card); color:var(--text); border:1px solid var(--border); }
+    .btn-secondary:hover { border-color:var(--primary); color:var(--primary); }
+    .btn-success { background:linear-gradient(135deg,var(--success),#059669); color:#fff; }
+    .btn-success:hover { opacity:0.9; }
+    .btn-lg { padding:16px 32px; font-size:1rem; }
+    .btn-xl { padding:18px 40px; font-size:1.05rem; border-radius:12px; }
+
+    /* CHECK LIST */
+    .check-list { list-style:none; display:flex; flex-direction:column; gap:10px; }
+    .check-list li { display:flex; align-items:flex-start; gap:12px; font-size:0.88rem; }
+    .check-list .ck { width:22px; height:22px; border-radius:6px; background:var(--success); display:flex; align-items:center; justify-content:center; color:#fff; font-size:0.75rem; flex-shrink:0; margin-top:1px; }
+
+    /* TABS (browser selector) */
+    .tabs { display:flex; gap:0; border-bottom:1px solid var(--border); margin-bottom:20px; }
+    .tab { padding:10px 20px; font-size:0.85rem; font-weight:600; cursor:pointer; color:var(--muted); border-bottom:2px solid transparent; transition:all 0.2s; }
+    .tab.active { color:var(--primary); border-bottom-color:var(--primary); }
+    .tab-content { display:none; }
+    .tab-content.active { display:block; }
+
+    /* DOWNLOAD CARD */
+    .dl-card { background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(139,92,246,0.1)); border:1px solid rgba(99,102,241,0.3); border-radius:16px; padding:30px 36px; text-align:center; }
+    .dl-icon { font-size:3rem; margin-bottom:12px; }
+    .dl-title { font-size:1.2rem; font-weight:800; margin-bottom:8px; }
+    .dl-sub { color:var(--muted); font-size:0.85rem; margin-bottom:24px; }
+    .file-info { display:flex; align-items:center; justify-content:center; gap:16px; margin-top:14px; color:var(--dim); font-size:0.8rem; }
+
+    /* SUCCESS SCREEN */
+    .success-screen { text-align:center; padding:20px; }
+    .success-icon { font-size:4rem; margin-bottom:16px; animation:popIn 0.5s ease; }
+    @keyframes popIn { 0%{transform:scale(0)} 80%{transform:scale(1.1)} 100%{transform:scale(1)} }
+    .success-title { font-size:2rem; font-weight:800; color:var(--success); margin-bottom:10px; }
+    .success-sub { color:var(--muted); margin-bottom:32px; }
+    .final-cta { display:inline-flex; align-items:center; gap:10px; padding:18px 48px; background:linear-gradient(135deg,var(--success),#059669); color:#fff; border-radius:12px; font-weight:800; font-size:1.1rem; text-decoration:none; cursor:pointer; border:none; transition:all 0.2s; }
+    .final-cta:hover { opacity:0.9; transform:translateY(-2px); box-shadow:0 8px 30px rgba(16,185,129,0.3); }
+
+    /* UTILITY */
+    .mt-2 { margin-top:8px; }
+    .mt-3 { margin-top:16px; }
+    .mt-4 { margin-top:24px; }
+    .text-sm { font-size:0.82rem; }
+    .text-muted { color:var(--muted); }
+    .sep { border:none; border-top:1px solid var(--border); margin:24px 0; }
+
+    @media (max-width:600px) {
+      .step-card { padding:24px 20px; }
+      .prog-label { display:none; }
+      .btn-row { flex-direction:column; }
+      .btn { justify-content:center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a class="nav-brand" href="/">
+      <div class="nav-logo">⚡</div>
+      <div>
+        <div class="nav-title">Tally Web Bridge</div>
+        <div class="nav-subtitle">Extension Installer</div>
+      </div>
+    </a>
+    <a class="nav-back" href="/">← Back to Home</a>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-badge"><span class="badge-dot"></span>One-time Setup • 60 Seconds</div>
+    <h1>Install the Chrome Extension<br><span class="gradient-text">Step-by-Step Guide</span></h1>
+    <p class="hero-sub">Zero EXE, Zero Python required. Just a lightweight browser extension that connects this site directly to your local Tally.</p>
+
+    <!-- PROGRESS TRACK -->
+    <div class="progress-track" id="progress-track">
+      <div class="prog-step">
+        <div class="prog-circle active" id="prog-1">1</div>
+        <div class="prog-label active" id="prog-label-1">Download</div>
+      </div>
+      <div class="prog-line" id="prog-line-1"></div>
+      <div class="prog-step">
+        <div class="prog-circle" id="prog-2">2</div>
+        <div class="prog-label" id="prog-label-2">Unzip</div>
+      </div>
+      <div class="prog-line" id="prog-line-2"></div>
+      <div class="prog-step">
+        <div class="prog-circle" id="prog-3">3</div>
+        <div class="prog-label" id="prog-label-3">Load Extension</div>
+      </div>
+      <div class="prog-line" id="prog-line-3"></div>
+      <div class="prog-step">
+        <div class="prog-circle" id="prog-4">4</div>
+        <div class="prog-label" id="prog-label-4">Done!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wizard">
+
+    <!-- ===== STEP 1: DOWNLOAD ===== -->
+    <div class="step-panel active" id="step-1">
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Download the Extension File</div>
+            <div class="step-subtitle">A small 6 KB zip file — no EXE, no Python, no administrator rights needed</div>
+          </div>
+        </div>
+
+        <div class="dl-card">
+          <div class="dl-icon">📦</div>
+          <div class="dl-title">Tally Web Bridge Extension</div>
+          <div class="dl-sub">Manifest V3 Chrome Extension — Works on Chrome, Edge &amp; Brave</div>
+          <a href="/downloads/tally-web-extension.zip" class="btn btn-primary btn-xl" download id="dl-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Extension (.zip)
+          </a>
+          <div class="file-info">
+            <span>📄 tally-web-extension.zip</span>
+            <span>•</span>
+            <span>~6 KB</span>
+            <span>•</span>
+            <span>Safe &amp; Private</span>
+          </div>
+        </div>
+
+        <div class="callout info mt-3">
+          <span class="callout-icon">ℹ️</span>
+          <div><strong>What's inside?</strong> Only 6 JavaScript files and a manifest. No Python, no executable files, no installation required. Your Tally data never leaves your computer.</div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="goStep(2)">
+            I Downloaded It — Next Step →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STEP 2: UNZIP ===== -->
+    <div class="step-panel" id="step-2">
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">Unzip the Downloaded File</div>
+            <div class="step-subtitle">Extract the contents to any folder on your computer</div>
+          </div>
+        </div>
+
+        <ul class="check-list">
+          <li>
+            <span class="ck">1</span>
+            <div>Find <strong>tally-web-extension.zip</strong> in your Downloads folder (bottom of your browser or in <code style="background:#374151;padding:2px 7px;border-radius:4px;font-size:0.82rem;color:#fbbf24">C:\Users\YourName\Downloads</code>).</div>
+          </li>
+          <li>
+            <span class="ck">2</span>
+            <div><strong>Right-click</strong> on the file and choose <strong>"Extract All..."</strong> or <strong>"Extract Here"</strong>.</div>
+          </li>
+          <li>
+            <span class="ck">3</span>
+            <div>A folder named <strong>tally-web-extension</strong> will appear. <strong>Remember where you extracted it</strong> — you'll need that folder path in the next step.</div>
+          </li>
+        </ul>
+
+        <div class="visual-box mt-3">
+          <div style="font-size:0.78rem; color:var(--muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">What your extracted folder should look like:</div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:0.82rem; line-height:1.9;">
+            <div style="color:#a78bfa;">📁 tally-web-extension/</div>
+            <div style="color:#94a3b8; padding-left:20px;">├── 📄 <span style="color:#fbbf24;">manifest.json</span></div>
+            <div style="color:#94a3b8; padding-left:20px;">├── 📄 background.js</div>
+            <div style="color:#94a3b8; padding-left:20px;">├── 📄 content.js</div>
+            <div style="color:#94a3b8; padding-left:20px;">├── 📄 popup.html</div>
+            <div style="color:#94a3b8; padding-left:20px;">├── 📄 popup.js</div>
+            <div style="color:#94a3b8; padding-left:20px;">└── 📁 <span style="color:#a78bfa;">icons/</span></div>
+          </div>
+        </div>
+
+        <div class="callout warning">
+          <span class="callout-icon">⚠️</span>
+          <div><strong>Important:</strong> Do NOT delete this extracted folder after installing. Chrome reads the extension files from this folder every time you start the browser.</div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="goStep(1)">← Back</button>
+          <button class="btn btn-primary" onclick="goStep(3)">I Unzipped It — Next Step →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STEP 3: LOAD EXTENSION ===== -->
+    <div class="step-panel" id="step-3">
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">Load the Extension in Chrome/Edge</div>
+            <div class="step-subtitle">Enable Developer Mode and load your unzipped folder — takes 30 seconds</div>
+          </div>
+        </div>
+
+        <!-- BROWSER TABS -->
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('chrome')">🌐 Google Chrome</div>
+          <div class="tab" onclick="switchTab('edge')">🔷 Microsoft Edge</div>
+          <div class="tab" onclick="switchTab('brave')">🦁 Brave</div>
+        </div>
+
+        <div class="tab-content active" id="tab-chrome">
+          <ul class="check-list">
+            <li><span class="ck">1</span><div>Click the button below to open the Chrome Extensions page (or type <code style="background:#374151;padding:2px 7px;border-radius:4px;font-size:0.82rem;color:#fbbf24">chrome://extensions</code> in your address bar):</div></li>
+          </ul>
+          <div class="mt-2">
+            <button class="btn btn-secondary" onclick="openExtensions('chrome')">
+              🌐 Open chrome://extensions
+            </button>
+          </div>
+
+          <ul class="check-list mt-3">
+            <li><span class="ck">2</span><div>Find the <strong>"Developer mode"</strong> toggle in the <strong>top-right corner</strong> of the page. Turn it <strong>ON</strong> (it should turn blue).</div></li>
+            <li><span class="ck">3</span><div>Click the <strong>"Load unpacked"</strong> button that appears on the top-left.</div></li>
+            <li><span class="ck">4</span><div>A <strong>folder picker</strong> dialog will open. Navigate to the extracted folder and click <strong>"Select Folder"</strong>.</div></li>
+          </ul>
+        </div>
+
+        <div class="tab-content" id="tab-edge">
+          <ul class="check-list">
+            <li><span class="ck">1</span><div>Click the button below to open the Edge Extensions page (or type <code style="background:#374151;padding:2px 7px;border-radius:4px;font-size:0.82rem;color:#fbbf24">edge://extensions</code> in your address bar):</div></li>
+          </ul>
+          <div class="mt-2">
+            <button class="btn btn-secondary" onclick="openExtensions('edge')">
+              🔷 Open edge://extensions
+            </button>
+          </div>
+          <ul class="check-list mt-3">
+            <li><span class="ck">2</span><div>Toggle <strong>"Developer mode"</strong> in the left sidebar — click it so it turns blue.</div></li>
+            <li><span class="ck">3</span><div>Click <strong>"Load unpacked"</strong> from the top of the page.</div></li>
+            <li><span class="ck">4</span><div>Select the folder you extracted in Step 2.</div></li>
+          </ul>
+        </div>
+
+        <div class="tab-content" id="tab-brave">
+          <ul class="check-list">
+            <li><span class="ck">1</span><div>Open <code style="background:#374151;padding:2px 7px;border-radius:4px;font-size:0.82rem;color:#fbbf24">brave://extensions</code> in your Brave browser.</div></li>
+            <li><span class="ck">2</span><div>Enable <strong>Developer mode</strong> (top-right toggle).</div></li>
+            <li><span class="ck">3</span><div>Click <strong>Load unpacked</strong> and select the unzipped folder.</div></li>
+          </ul>
+        </div>
+
+        <!-- VISUAL MOCKUP -->
+        <div class="visual-box mt-3">
+          <div style="font-size:0.78rem; color:var(--muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">What Chrome Extensions Page Looks Like:</div>
+          <div class="mock-browser">
+            <div class="mock-chrome-bar">
+              <div class="mock-dots">
+                <div class="mock-dot red"></div>
+                <div class="mock-dot yellow"></div>
+                <div class="mock-dot green"></div>
+              </div>
+              <div class="mock-url">chrome://extensions</div>
+            </div>
+            <div class="mock-chrome-content">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <div style="font-weight:800;font-size:1rem;">Extensions</div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span style="font-size:0.78rem;color:var(--muted);">Developer mode</span>
+                  <div class="mock-toggle" id="mock-toggle-btn" onclick="toggleMockDev()" title="Click to toggle demo">
+                    <div class="knob"></div>
+                  </div>
+                </div>
+              </div>
+              <button class="mock-btn sm" id="mock-load-btn" style="opacity:0.3;cursor:not-allowed" disabled>
+                📂 Load unpacked
+              </button>
+              <div id="mock-load-hint" style="font-size:0.72rem;color:#ef4444;margin-top:6px;display:none;">← Enable Developer mode first!</div>
+              <div id="mock-ext-preview" style="display:none;">
+                <div class="mock-ext-card mt-3">
+                  <div class="ext-icon">⚡</div>
+                  <div class="ext-info">
+                    <div class="ext-name">Tally Web Bridge</div>
+                    <div class="ext-sub">v1.0.0 • By Ansh Garg</div>
+                  </div>
+                  <div class="ext-status">
+                    <div class="mock-toggle"><div class="knob"></div></div>
+                  </div>
+                </div>
+                <div class="callout success mt-3" style="margin-bottom:0;">
+                  <span class="callout-icon">✅</span>
+                  <div>Extension loaded successfully! You'll see the ⚡ icon in your browser toolbar.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <span class="callout-icon">💡</span>
+          <div><strong>Tip — Copy the folder path:</strong> In the folder picker dialog, click the address bar at the top, paste the path to your extracted folder, and press Enter to jump there directly instead of clicking through folders.</div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="goStep(2)">← Back</button>
+          <button class="btn btn-primary" onclick="goStep(4)">Extension Installed! →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STEP 4: DONE ===== -->
+    <div class="step-panel" id="step-4">
+      <div class="step-card">
+        <div class="success-screen">
+          <div class="success-icon">🎉</div>
+          <div class="success-title">You're All Set!</div>
+          <p class="success-sub">The Tally Web Bridge extension is installed and running.<br>It automatically bridges this website to your local Tally on port 8080.</p>
+
+          <div style="max-width:480px;margin:0 auto 32px;">
+            <ul class="check-list" style="text-align:left;">
+              <li><span class="ck">✓</span><div>Extension silently connects browser → Tally on <code style="background:#374151;padding:2px 7px;border-radius:4px;font-size:0.82rem;color:#fbbf24">localhost:8080</code></div></li>
+              <li><span class="ck">✓</span><div>Automatic company detection — no manual XML export needed</div></li>
+              <li><span class="ck">✓</span><div>All extraction happens on the cloud — your Tally data stays private</div></li>
+              <li><span class="ck">✓</span><div>Works each time — no re-installation required</div></li>
+            </ul>
+          </div>
+
+          <a class="final-cta" href="/dashboard">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+            Open Web Extractor Dashboard →
+          </a>
+
+          <div class="text-muted text-sm mt-3">
+            Make sure TallyPrime or Tally.ERP 9 is running before opening the dashboard.
+          </div>
+
+          <hr class="sep">
+          <div class="text-muted text-sm">
+            Look for the <strong>⚡ Tally Web Bridge</strong> icon in your Chrome toolbar to check Tally connection status anytime.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /wizard -->
+
+  <script>
+    var currentStep = 1;
+
+    function goStep(n) {
+      document.getElementById('step-' + currentStep).classList.remove('active');
+      document.getElementById('prog-' + currentStep).classList.remove('active');
+      document.getElementById('prog-label-' + currentStep).classList.remove('active');
+
+      // Mark previous steps as done
+      for (var i = 1; i < n; i++) {
+        document.getElementById('prog-' + i).classList.add('done');
+        document.getElementById('prog-' + i).textContent = '✓';
+        document.getElementById('prog-label-' + i).classList.remove('active');
+        document.getElementById('prog-label-' + i).classList.add('done');
+        if (document.getElementById('prog-line-' + i)) {
+          document.getElementById('prog-line-' + i).classList.add('done');
+        }
+      }
+      // Un-done future steps if going back
+      for (var i = n; i <= 4; i++) {
+        var el = document.getElementById('prog-' + i);
+        if (el) { el.classList.remove('done'); el.textContent = i; }
+        var ll = document.getElementById('prog-label-' + i);
+        if (ll) { ll.classList.remove('done'); }
+        var ln = document.getElementById('prog-line-' + i);
+        if (ln) { ln.classList.remove('done'); }
+      }
+
+      currentStep = n;
+      document.getElementById('step-' + n).classList.add('active');
+      document.getElementById('prog-' + n).classList.add('active');
+      document.getElementById('prog-label-' + n).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function switchTab(name) {
+      document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+      document.querySelectorAll('.tab-content').forEach(function(t) { t.classList.remove('active'); });
+      event.target.classList.add('active');
+      document.getElementById('tab-' + name).classList.add('active');
+    }
+
+    function openExtensions(browser) {
+      if (browser === 'chrome') {
+        window.open('chrome://extensions', '_blank');
+      } else if (browser === 'edge') {
+        window.open('edge://extensions', '_blank');
+      }
+    }
+
+    var devMode = false;
+    function toggleMockDev() {
+      devMode = !devMode;
+      var toggle = document.getElementById('mock-toggle-btn');
+      var loadBtn = document.getElementById('mock-load-btn');
+      var hint = document.getElementById('mock-load-hint');
+      var preview = document.getElementById('mock-ext-preview');
+
+      if (devMode) {
+        toggle.classList.remove('off');
+        loadBtn.style.opacity = '1';
+        loadBtn.style.cursor = 'pointer';
+        loadBtn.disabled = false;
+        hint.style.display = 'none';
+        loadBtn.onclick = function() {
+          preview.style.display = 'block';
+        };
+      } else {
+        toggle.classList.add('off');
+        loadBtn.style.opacity = '0.3';
+        loadBtn.style.cursor = 'not-allowed';
+        loadBtn.disabled = true;
+        hint.style.display = 'block';
+        preview.style.display = 'none';
+      }
+    }
+    // Start with toggle off for demo
+    document.getElementById('mock-toggle-btn').classList.add('off');
+
+    // Auto-detect if extension is already installed
+    window.addEventListener('TallyExtensionReady', function() {
+      goStep(4); // skip to done if already installed
+    });
+    if (window.__TALLY_EXTENSION_INSTALLED__) {
+      goStep(4);
+    }
+
+    // Mark download as done when user clicks
+    document.getElementById('dl-btn').addEventListener('click', function() {
+      setTimeout(function() {
+        document.getElementById('dl-btn').innerHTML = '✓ Downloaded!';
+        document.getElementById('dl-btn').style.background = 'linear-gradient(135deg,#10b981,#059669)';
+      }, 1000);
+    });
+  </script>
+
+</body>
+</html>

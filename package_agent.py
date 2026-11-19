@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 Packages both the Agent and the Chrome Extension into website/downloads/
+The extension zip includes INSTALL_EXTENSION.bat for 1-click Windows setup.
 """
 import os
 import zipfile
@@ -40,7 +41,21 @@ def package_dir(source_dir, zip_dest, label):
 # 1. Package Agent
 package_dir(AGENT_DIR, DOWNLOADS_DIR / "tally-web-agent.zip", "Agent Bundle")
 
-# 2. Package Chrome Extension
-package_dir(EXT_DIR, DOWNLOADS_DIR / "tally-web-extension.zip", "Chrome Extension")
+# 2. Package Chrome Extension (all files from extension/ folder)
+ext_zip_path = DOWNLOADS_DIR / "tally-web-extension.zip"
+print(f"Packaging Chrome Extension (with installer) -> {ext_zip_path}...")
+with zipfile.ZipFile(ext_zip_path, "w", zipfile.ZIP_DEFLATED) as z:
+    for root, dirs, files in os.walk(EXT_DIR):
+        root_path = Path(root)
+        rel_root = root_path.relative_to(EXT_DIR)
+        if should_exclude(rel_root):
+            continue
+        for file in files:
+            file_path = root_path / file
+            rel_file = file_path.relative_to(EXT_DIR)
+            if should_exclude(rel_file):
+                continue
+            z.write(file_path, arcname=str(rel_file))
+print(f"  -> Created {ext_zip_path.name} ({ext_zip_path.stat().st_size:,} bytes)")
 
 print("All distribution packages ready in website/downloads/")

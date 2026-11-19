@@ -63,6 +63,11 @@ def index():
 def dashboard():
     return render_template("dashboard.html")
 
+# ---------------- Extension Install Guide ----------------
+@app.route("/install")
+def install_guide():
+    return send_from_directory(str(WEBSITE_DIR), "install.html")
+
 # ---------------- Static Assets ----------------
 @app.route("/css/<path:filename>")
 def serve_css(filename):
