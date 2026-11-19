@@ -1,0 +1,154 @@
+body {
+  width: 320px;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #F8FAFC;
+  color: #0F172A;
+  box-sizing: border-box;
+}
+
+.popup-container {
+  padding: 16px;
+}
+
+.popup-header {
+  margin-bottom: 14px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  width: 34px;
+  height: 34px;
+  background: #1E3A8A;
+  color: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1E3A8A;
+}
+
+.version {
+  font-size: 0.7rem;
+  color: #64748B;
+}
+
+.status-card {
+  background: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 14px;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot.online { background: #10B981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); }
+.dot.offline { background: #EF4444; box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2); }
+.dot.checking { background: #F59E0B; animation: pulse 1.2s infinite; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.status-detail {
+  font-size: 0.72rem;
+  color: #64748B;
+  margin-top: 4px;
+  padding-left: 18px;
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 4px;
+}
+
+.input-row {
+  display: flex;
+  gap: 6px;
+}
+
+.input-row input {
+  flex: 1;
+  padding: 6px 8px;
+  font-size: 0.8rem;
+  border: 1px solid #CBD5E1;
+  border-radius: 4px;
+}
+
+.btn {
+  padding: 7px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.btn-primary {
+  background: #1E3A8A;
+  color: white;
+}
+.btn-primary:hover {
+  background: #172554;
+}
+
+.btn-secondary {
+  background: #F1F5F9;
+  color: #334155;
+  border-color: #CBD5E1;
+}
+.btn-secondary:hover {
+  background: #E2E8F0;
+}
+
+.btn-block {
+  width: 100%;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.btn-sm {
+  padding: 6px 10px;
+  font-size: 0.75rem;
+}
+
+.footer {
+  text-align: center;
+  font-size: 0.68rem;
+  color: #94A3B8;
+  margin-top: 10px;
+}

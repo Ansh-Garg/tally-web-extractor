@@ -53,6 +53,16 @@
   <!-- ================= MAIN CONTAINER ================= -->
   <main class="main-container">
 
+    <!-- ALERT BANNER (If Extension is missing) -->
+    <div id="extension-missing-banner" class="alert-banner alert-warning" style="display: none;">
+      <div class="alert-icon">🧩</div>
+      <div class="alert-content">
+        <strong>Chrome Extension Bridge Required:</strong>
+        <span>To extract Tally data directly in your browser without any EXE or Python installation, add our lightweight Chrome Extension (6 KB).</span>
+      </div>
+      <a href="/downloads/tally-web-extension.zip" class="btn btn-sm btn-primary" download>Download Extension (.zip)</a>
+    </div>
+
     <!-- ALERT BANNER (If Tally is offline) -->
     <div id="tally-offline-banner" class="alert-banner alert-warning" style="display: none;">
       <div class="alert-icon">⚠️</div>

@@ -91,12 +91,12 @@ https://tally-web-extractor.onrender.com
 
 ### What happens when users visit your live Render URL?
 1. **The Commercial Landing Page** loads instantly with branding, architecture explanations, and feature breakdowns.
-2. Users can click **Download Agent (.ZIP)** to download the 35 KB local bridge agent directly from your Render server.
-3. When the user launches `run_web_agent.bat` on their PC:
-   - The browser automatically connects to their local Tally on `localhost:8080`.
-   - The live website dynamically detects that the agent is online and shows:
-     > *"✓ Local Agent Active on Port 5000 (Tally is ONLINE)"*
-   - Clicking **Launch Dashboard** opens the extractor interface!
+2. **Zero EXE Mode (Chrome Extension - Recommended)**:
+   - Users click **Add Chrome Extension (6 KB)** to download `tally-web-extension.zip`.
+   - In Chrome, they open `chrome://extensions`, enable Developer Mode, and click *Load unpacked*.
+   - They click **Launch Web Extractor** (`/dashboard`). The dashboard instantly communicates with their local Tally on `localhost:8080` without running any local Python server or desktop EXE!
+3. **Local Agent Mode (Optional Fallback)**:
+   - Users can alternatively download `tally-web-agent.zip` (35 KB) and double-click `run_web_agent.bat` if they prefer a local background server.
 
 ---
 
@@ -104,14 +104,15 @@ https://tally-web-extractor.onrender.com
 
 | File | Purpose for Render |
 |---|---|
-| `server.py` | Production Flask WSGI entrypoint serving the landing page & downloads |
-| `requirements.txt` | Lists `flask` and `gunicorn` for Render's build process |
+| `server.py` | Production Flask WSGI entrypoint serving landing page, dashboard, and Cloud Extraction API |
+| `tally_engine.py` | Enterprise core parsing TDL XML, reconstructing hierarchies, Dr/Cr signed values, and generating Master XLSX |
+| `requirements.txt` | Lists dependencies (`flask`, `gunicorn`, `openpyxl`, `werkzeug`) for Render |
 | `render.yaml` | Render Blueprint configuration (auto-configures the service) |
 | `Procfile` | Specifies `web: gunicorn server:app` process type |
-| `.gitignore` | Prevents local cache, virtualenvs, and dumps from pushing to GitHub |
-| `package_agent.py` | Automatically bundles `agent/` into `website/downloads/tally-web-agent.zip` during build |
+| `extension/` | Lightweight Manifest V3 Chrome Extension source code |
 | `website/` | The frontend landing page, CSS, JS, and downloadable assets |
-| `agent/` | The local bridge agent source code that users download |
+| `agent/` | The optional fallback local bridge agent source code |
+| `package_agent.py` | Automatically bundles both `tally-web-extension.zip` and `tally-web-agent.zip` during build |
 
 ---
 

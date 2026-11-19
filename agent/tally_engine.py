@@ -360,17 +360,13 @@ def classify_ledger(parent_group, hierarchy):
             return "Balance Sheet"
     return "Balance Sheet"
 
-def inspect_company_structure(company, tally_url):
+def inspect_company_structure_from_xml(g_xml, l_xml, company=""):
     """
-    Inspects actual ledger structure, mapping them to Statement Primary Heads and full group paths.
-    Returns:
-      (hierarchy, ledgers, pl_statement_heads, bs_statement_heads, all_groups, bs_count, pl_count)
+    Parses groups and ledgers XML to build structure, hierarchy, and primary statement heads.
     """
-    g_xml = post_xml(groups_request(company), tally_url, timeout=120)
     g_root = parse_xml_safe(g_xml, f"groups_{company}")
     hierarchy = build_group_hierarchy(g_root)
 
-    l_xml = post_xml(ledgers_request(company), tally_url, timeout=120)
     l_root = parse_xml_safe(l_xml, f"ledgers_{company}")
 
     ledgers = []
@@ -414,6 +410,16 @@ def inspect_company_structure(company, tally_url):
 
     return hierarchy, ledgers, pl_statement_heads, bs_statement_heads, all_groups, bs_count, pl_count
 
+def inspect_company_structure(company, tally_url):
+    """
+    Inspects actual ledger structure, mapping them to Statement Primary Heads and full group paths.
+    Returns:
+      (hierarchy, ledgers, pl_statement_heads, bs_statement_heads, all_groups, bs_count, pl_count)
+    """
+    g_xml = post_xml(groups_request(company), tally_url, timeout=120)
+    l_xml = post_xml(ledgers_request(company), tally_url, timeout=120)
+    return inspect_company_structure_from_xml(g_xml, l_xml, company)
+
 # ---------------- MATCHING LOGIC ----------------
 def is_ledger_matched_by_selection(ledger_name, parent_group, selection_mode, target_heads, hierarchy):
     if selection_mode == "all":
@@ -441,15 +447,15 @@ def is_ledger_matched_by_selection(ledger_name, parent_group, selection_mode, ta
     return True
 
 # ---------------- DATA EXTRACTION (RECONCILED & TRIAL BALANCE READY) ----------------
-def process_company_data(company, selection_mode, selection_label, target_heads, fy_start, fy_end, tally_url, fast_mode=False):
+def process_company_data_from_xml(company, selection_mode, selection_label, target_heads, fy_start, fy_end, g_xml, l_xml, v_xml, fast_mode=False):
     """
-    Extracts Trial Balance items and Transactions for a single company.
+    Extracts Trial Balance items and Transactions for a single company using provided XML payloads.
     Reconciles 100% with Ledger Master:
       - Ignores Memorandum, Optional, Cancelled, and Deleted vouchers.
       - Net Amount on transactions is strictly (Debit - Credit) as signed amount without Dr/Cr text.
       - TB Extract includes active ledgers with signed 'TB Balance (Dr +, Cr -)'.
     """
-    hierarchy, ledgers, _, _, _, bs_count, pl_count = inspect_company_structure(company, tally_url)
+    hierarchy, ledgers, _, _, _, bs_count, pl_count = inspect_company_structure_from_xml(g_xml, l_xml, company)
 
     matched_masters = []
     matched_names = set()
@@ -491,12 +497,8 @@ def process_company_data(company, selection_mode, selection_label, target_heads,
         print(f"  [{company}] No ledgers matched the selected filter. Skipping vouchers.")
         return [], [], {"company": company, "matched_ledgers": 0, "active_ledgers": 0, "txns_count": 0, "debit_sum": 0.0, "credit_sum": 0.0}
 
-    # Voucher Extraction (Targeted if fast_mode=True)
-    mode_str = "Fast Mode" if fast_mode else "Standard Mode"
-    print(f"  [{company}] Pulling transactions ({mode_str}: {fmt_date(fy_start)} to {fmt_date(fy_end)})...", end=" ", flush=True)
-    v_xml = post_xml(vouchers_request(company, fy_start, fy_end, fast_mode=fast_mode), tally_url, timeout=7200)
+    # Parse vouchers
     v_root = parse_xml_safe(v_xml, f"vouchers_{company}")
-    print("[DONE]")
 
     raw_txns = []
     ignored_vouchers = 0
@@ -623,6 +625,79 @@ def process_company_data(company, selection_mode, selection_label, target_heads,
         "credit_sum": total_crd,
     }
     return active_tb_masters, raw_txns, comp_stats
+
+def process_company_data(company, selection_mode, selection_label, target_heads, fy_start, fy_end, tally_url, fast_mode=False):
+    g_xml = post_xml(groups_request(company), tally_url, timeout=120)
+    l_xml = post_xml(ledgers_request(company), tally_url, timeout=120)
+    mode_str = "Fast Mode" if fast_mode else "Standard Mode"
+    print(f"  [{company}] Pulling transactions ({mode_str}: {fmt_date(fy_start)} to {fmt_date(fy_end)})...", end=" ", flush=True)
+    v_xml = post_xml(vouchers_request(company, fy_start, fy_end, fast_mode=fast_mode), tally_url, timeout=7200)
+    print("[DONE]")
+    return process_company_data_from_xml(company, selection_mode, selection_label, target_heads, fy_start, fy_end, g_xml, l_xml, v_xml, fast_mode=fast_mode)
+
+def execute_cloud_extraction(companies_data, selection_mode, selection_label, target_heads, fy_start, fy_end, output_root):
+    output_root = Path(output_root)
+    output_root.mkdir(parents=True, exist_ok=True)
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    all_masters = []
+    all_txns = []
+    company_stats = []
+
+    for item in companies_data:
+        c_name = item.get("company", "Company")
+        g_xml = item.get("groups_xml", "")
+        l_xml = item.get("ledgers_xml", "")
+        v_xml = item.get("vouchers_xml", "")
+        m, t, stats = process_company_data_from_xml(
+            c_name, selection_mode, selection_label, target_heads,
+            fy_start, fy_end, g_xml, l_xml, v_xml
+        )
+        all_masters.extend(m)
+        all_txns.extend(t)
+        company_stats.append(stats)
+
+    total_debits = sum(s["debit_sum"] for s in company_stats)
+    total_credits = sum(s["credit_sum"] for s in company_stats)
+    tb_net_sum = sum(float(r.get("TB Balance (Dr +, Cr -)", 0)) for r in all_masters)
+
+    prefix = "Consolidated_Tally_Extraction" if len(companies_data) > 1 else f"Tally_Extraction_{sanitize_folder_name(companies_data[0].get('company', 'Single'))}"
+    excel_file = output_root / f"{prefix}_{ts}.xlsx"
+
+    summary_headers = ["Metric", "Details"]
+    summary_rows = [
+        {"Metric": "Software Application", "Details": f"{APP_TITLE} {APP_VERSION} (Cloud Engine)"},
+        {"Metric": "Developed By", "Details": f"{APP_DEVELOPER} (Enterprise Systems Automation)"},
+        {"Metric": "Extraction Mode", "Details": "100% Online Web Architecture (Zero Local EXE)"},
+        {"Metric": "Extraction Head / Scope", "Details": selection_label},
+        {"Metric": "Audit Period Range", "Details": f"{fmt_date(fy_start)} to {fmt_date(fy_end)}"},
+        {"Metric": "Timestamp", "Details": datetime.now().strftime("%d-%m-%Y %H:%M:%S")},
+        {"Metric": "Total Companies Included", "Details": str(len(companies_data))},
+        {"Metric": "Total Active Ledgers (TB)", "Details": f"{len(all_masters):,}"},
+        {"Metric": "Total Transactions Dumped", "Details": f"{len(all_txns):,}"},
+        {"Metric": "Consolidated Debit Sum (INR)", "Details": f"{total_debits:,.2f}"},
+        {"Metric": "Consolidated Credit Sum (INR)", "Details": f"{total_credits:,.2f}"},
+        {"Metric": "Trial Balance Net Sum (INR)", "Details": f"{tb_net_sum:,.2f}"},
+        {"Metric": "TB Balance Rule", "Details": "Dr is (+) and Cr is (-), allowing =SUM(...) for Trial Balance Total"},
+        {"Metric": "Net Amount Rule (Txns)", "Details": "Net Amount = (Debit - Credit) of that specific transaction line"},
+    ]
+
+    for s in company_stats:
+        summary_rows.append({
+            "Metric": f"  - {s['company']}",
+            "Details": f"{s['active_ledgers']:,} active ledgers | {s['txns_count']:,} txns | Dr: {s['debit_sum']:,.2f} | Cr: {s['credit_sum']:,.2f}"
+        })
+
+    generate_single_xlsx_workbook(
+        excel_file,
+        [
+            ("Trial Balance Extract", TB_HEADERS, all_masters),
+            ("Transaction Register", TXN_HEADERS, all_txns),
+            ("Summary", summary_headers, summary_rows),
+        ]
+    )
+
+    return excel_file, company_stats, tb_net_sum
 
 # ---------------- OUTPUT HEADERS (TB EXTRACT & NET AMOUNT) ----------------
 TB_HEADERS = [

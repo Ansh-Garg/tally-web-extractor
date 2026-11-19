@@ -82,6 +82,7 @@ body {
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+  flex-shrink: 0;
 }
 
 .brand-icon svg {
@@ -133,6 +134,7 @@ body {
   font-size: 0.78rem;
   font-weight: 600;
   border: 1px solid transparent;
+  user-select: none;
 }
 
 .status-dot {
@@ -140,6 +142,17 @@ body {
   height: 8px;
   border-radius: 50%;
   display: inline-block;
+  flex-shrink: 0;
+}
+
+.status-text {
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+
+.license-text {
+  font-weight: 600;
+  font-size: 0.78rem;
 }
 
 .status-online {
@@ -177,6 +190,11 @@ body {
   color: #334155;
   border-color: #CBD5E1;
   cursor: pointer;
+  transition: all 0.15s ease;
+}
+.status-trial:hover {
+  background: #E2E8F0;
+  border-color: #94A3B8;
 }
 
 @keyframes pulse {
@@ -199,6 +217,7 @@ body {
   border: 1px solid transparent;
   transition: all 0.15s ease-in-out;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .btn-primary {
@@ -243,6 +262,18 @@ body {
   background: #F1F5F9;
   border-color: #CBD5E1;
   color: var(--text-main);
+}
+
+.btn-group {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-sm {
@@ -302,9 +333,28 @@ body {
   align-items: start;
 }
 
+.wizard-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+}
+
+.monitor-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  position: sticky;
+  top: 90px;
+}
+
 @media (max-width: 1024px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
+  }
+  .monitor-column {
+    position: static;
   }
 }
 
@@ -354,6 +404,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .card-title {
@@ -376,6 +427,13 @@ body {
 }
 
 /* ================= FORM CONTROLS ================= */
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
 .form-group {
   display: flex;
   flex-direction: column;
@@ -467,6 +525,18 @@ body {
   font-size: 0.72rem;
   color: var(--text-muted);
   margin-top: 2px;
+}
+
+/* Checkbox Row & Label */
+.checkbox-row {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-label {
+  font-size: 0.82rem;
+  color: var(--text-main);
+  line-height: 1.4;
 }
 
 /* Custom Checkbox */
@@ -596,6 +666,15 @@ body {
   padding: 8px 4px;
 }
 
+.heads-loading {
+  padding: 18px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-style: italic;
+  grid-column: 1 / -1;
+}
+
 .head-item {
   display: flex;
   align-items: center;
@@ -626,6 +705,7 @@ body {
 /* ================= ACTION / EXTRACT BUTTON ================= */
 .action-card {
   margin-top: 10px;
+  margin-bottom: 20px;
 }
 
 .btn-extract {
@@ -675,6 +755,18 @@ body {
   margin-bottom: 16px;
   box-shadow: 0 8px 20px rgba(4, 120, 87, 0.25);
   animation: slideDown 0.3s ease;
+}
+
+.download-icon {
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: white;
 }
 
 @keyframes slideDown {
@@ -769,6 +861,10 @@ body {
 .log-line.text-danger { color: #F87171; }
 
 /* History List */
+.history-card {
+  border-top: 3px solid #3B82F6;
+}
+
 .history-list {
   max-height: 200px;
   overflow-y: auto;
@@ -875,6 +971,14 @@ body {
   gap: 16px;
 }
 
+.about-body {
+  padding: 20px 22px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .modal-section {
   display: flex;
   flex-direction: column;
@@ -968,5 +1072,6 @@ body {
 }
 
 /* Utilities */
+.mt-1 { margin-top: 4px; }
 .mt-2 { margin-top: 8px; }
 .mt-3 { margin-top: 12px; }

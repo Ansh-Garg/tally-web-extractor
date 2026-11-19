@@ -47,7 +47,7 @@ body {
 .navbar {
   position: sticky;
   top: 0;
-  background: rgba(11, 17, 32, 0.85);
+  background: rgba(11, 17, 32, 0.88);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-dark);
   z-index: 50;
@@ -142,6 +142,11 @@ body {
   font-weight: 600;
   border: 1px solid transparent;
 }
+.status-label {
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
 .status-probing {
   background: rgba(245, 158, 11, 0.15);
   color: #FBBF24;
@@ -314,7 +319,32 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
+  flex-shrink: 0;
 }
+
+.bridge-radar {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid #3B82F6;
+  animation: radarPulse 2s infinite ease-out;
+  pointer-events: none;
+}
+.bridge-card-online .bridge-radar {
+  border-color: #34D399;
+}
+
+@keyframes radarPulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.bridge-status-icon {
+  font-size: 1.2rem;
+  z-index: 2;
+}
+
 .bridge-details {
   flex: 1;
 }
@@ -336,6 +366,11 @@ body {
   color: #93C5FD;
 }
 
+.bridge-cta {
+  display: flex;
+  align-items: center;
+}
+
 .hero-actions {
   display: flex;
   justify-content: center;
@@ -350,6 +385,11 @@ body {
   padding-top: 36px;
   border-top: 1px solid var(--border-dark);
 }
+
+.stat-item {
+  text-align: center;
+}
+
 .stat-number {
   font-size: 1.6rem;
   font-weight: 800;
@@ -428,6 +468,16 @@ body {
   width: 280px;
   text-align: center;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.arch-browser {
+  border-top: 3px solid #3B82F6;
+}
+.arch-agent {
+  border-top: 3px solid #10B981;
+}
+.arch-tally {
+  border-top: 3px solid #F59E0B;
 }
 
 .arch-icon {
@@ -605,6 +655,12 @@ body {
   box-shadow: 0 20px 40px rgba(30, 58, 138, 0.25);
 }
 
+.download-content {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
 .download-heading {
   font-size: 2.2rem;
   font-weight: 800;
@@ -705,6 +761,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .footer-title {

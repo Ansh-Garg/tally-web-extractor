@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "Tally Web Bridge",
+  "version": "1.0.0",
+  "description": "Bridges your web browser directly to TallyPrime / ERP 9 for zero-friction automated data extraction.",
+  "author": "Ansh Garg",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "http://localhost:8080/*",
+    "http://127.0.0.1:8080/*",
+    "http://localhost:*/*",
+    "http://127.0.0.1:*/*",
+    "https://*.onrender.com/*",
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.onrender.com/*",
+        "http://localhost:*/*",
+        "http://127.0.0.1:*/*",
+        "file:///*",
+        "<all_urls>"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Tally Web Bridge Status",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tally Web Bridge</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <div class="popup-header">
+      <div class="brand">
+        <div class="logo">⚡</div>
+        <div>
+          <div class="title">Tally Web Bridge</div>
+          <div class="version">v1.0.0 &bull; By Ansh Garg</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="status-card">
+      <div class="status-indicator">
+        <span id="status-dot" class="dot checking"></span>
+        <span id="status-text" class="status-label">Checking Tally...</span>
+      </div>
+      <div id="status-detail" class="status-detail">Probing localhost:8080</div>
+    </div>
+
+    <div class="form-group">
+      <label for="tally-url-input">Tally Server URL</label>
+      <div class="input-row">
+        <input type="text" id="tally-url-input" value="http://localhost:8080" placeholder="http://localhost:8080">
+        <button id="btn-save-url" class="btn btn-sm">Save</button>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button id="btn-open-dashboard" class="btn btn-primary btn-block">
+        Open Web Extractor Dashboard ↗
+      </button>
+      <button id="btn-check-again" class="btn btn-secondary btn-block">
+        Check Tally Connection
+      </button>
+    </div>
+
+    <div class="footer">
+      Zero EXE &bull; Direct Browser Bridge &bull; 100% Private
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
